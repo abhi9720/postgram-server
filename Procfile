@@ -1,1 +1,1 @@
-web:node ./app/index.js
+web: ./app npm start
