@@ -93,6 +93,7 @@ app.use("/messages", messageRoute);
 //==============================  port
 // it can handle all kinds of error in my app any where it is trown
 app.use((error, req, res, next) => {
+  console.log(error)
   res.status(error.status || 500);
   res.json({
     error: {
