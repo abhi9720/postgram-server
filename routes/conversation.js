@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Conversation = require("../models/Conversation");
-const isAuth = require("../middleware/auth");
+const isAuth = require("../Middleware/auth");
 
 //new conversation
 router.post("/", isAuth, async (req, res) => {

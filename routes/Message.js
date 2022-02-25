@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const Message = require('../models/Message');
-const isAuth = require("../middleware/auth");
+const isAuth = require("../Middleware/auth");
 // add message
 router.post('/', isAuth, async (req, res) => {
 	const newMessage = new Message(req.body);
