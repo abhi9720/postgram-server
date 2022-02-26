@@ -4,7 +4,7 @@ const isAuth = require("../Middleware/auth");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
 const upload = multer({ storage });
-
+const mongoose = require('mongoose');
 
 
 
@@ -323,14 +323,22 @@ router.get('/connection/suggestion', isAuth, async (req, res) => {
   // we need current login user here 
   // so we can pick those samples for which this user is not friend and not following
   // using  $nin operator find all user in which this user._id not present in friend .
+  const loginuserconnection = await User.findById(req?.user.id).select('friends') || [];
+  const avoid = [...loginuserconnection?.friends, req?.user.id]
 
-
+  const ids = avoid.map(function (el) { return mongoose.Types.ObjectId(el) })
   const suggestion = await User.aggregate([
-    // { $match: { a: 10 } },
-    { $sample: { size: 1 } }
+
+    {
+      $match: {
+        _id: { $nin: ids }
+      }
+    },
+    { $sample: { size: 5 } },
+    { $project: { "_id": "$_id", "profilePicture": "$profilePicture", "username": "$username" } }
   ])
-  console.log(suggestion);
-  return res.send(suggestion)
+
+  return res.status(200).json(suggestion)
 })
 
 module.exports = router;
