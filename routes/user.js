@@ -92,14 +92,16 @@ router.delete("/:id", isAuth, async (req, res, next) => {
 router.get("/", isAuth, async (req, res) => {
   const userId = req.query.userId;
   const username = req.query.username;
+
   try {
     const user = userId
       ? await User.findById(userId).select("-password")
       : await User.findOne({ username: username }).select("-password");
-    const { password, updatedAt, ...other } = user._doc;
+    const { password, updatedAt, ...other } = user?._doc;
 
     return res.status(200).json(other);
   } catch (err) {
+    console.log(err)
     res.status(500).json(err);
   }
 });
