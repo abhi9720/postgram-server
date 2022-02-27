@@ -2,12 +2,11 @@ module.exports = function (io) {
   console.log(" io.req received ");
   // console.dir(io)
   io.on("connection", (socket) => {
-    console.log("user connected");
+    console.log("user connected " + socket.id);
     socket.on("addUser", (userId) => {
       addUser(userId, socket.id);
       io.emit("getUsers", users); // this is send to everyone  now get this on client side we should socket.on('getUsers')
-      console.log("-----------online users ----------------------");
-      console.log(users);
+
     });
 
     //send and get message
@@ -28,6 +27,7 @@ module.exports = function (io) {
       const user = getUser(receiverId);
 
       if (user) {
+
         io.to(user.socketId).emit("getFriendRequest", {
           senderId,
         });
@@ -38,7 +38,7 @@ module.exports = function (io) {
 
     //when disconnect
     socket.on("disconnect", () => {
-      console.log("a user disconnected!");
+      console.log("a user disconnected!", socket.id);
       removeUser(socket.id); // remover user
       io.emit("getUsers", users); // set new online users
     });

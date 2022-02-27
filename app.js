@@ -65,7 +65,7 @@ server.listen(port, () => console.log(`Server has started.`));
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: process.env.ALLOW_CLIENT,
+    origin: '*',
   },
 });
 socketEvents(io);
