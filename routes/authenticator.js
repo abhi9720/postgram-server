@@ -32,19 +32,19 @@ router.post("/register",
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(req.body.password, salt);
       // create new user
-      const newUser = new User({
+      const user = new User({
         username: req.body.username,
         email: req.body.email,
         password: hashedPassword,
       });
 
       // saveuser 
-      await newUser.save();
+      await user.save();
 
 
       const payload = {
         user: {
-          id: newUser._id,
+          id: user._id,
         },
       };
       jwt.sign(
@@ -53,7 +53,7 @@ router.post("/register",
         { expiresIn: "160h" },
         (err, token) => {
           if (err) throw err;
-          return res.status(200).json(token);
+          return res.status(200).json({ token, user });
         }
       );
     } catch (err) {
@@ -120,7 +120,10 @@ router.post("/login", [
 router.get('/', isAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    res.json(user);
+    if (!user) {
+      throw new Error('User Not Found :)')
+    }
+    res.status(200).json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
