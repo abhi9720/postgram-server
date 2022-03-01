@@ -110,37 +110,32 @@ router.get("/", isAuth, async (req, res) => {
 // get all users
 router.get("/all", async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("username profilePicture");
 
-    let userList = [];
-    users.map((friend) => {
-      const { _id, username, profilePicture } = friend;
-
-      userList.push({ _id, username, profilePicture });
-    });
-    res.status(200).json(userList);
+    // let userList = [];
+    // users.map((friend) => {
+    //   const { _id, username, profilePicture } = friend;
+    //   userList.push({ _id, username, profilePicture });
+    // });
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // get friends
+// use populate command 
 router.get("/followers/:userId", isAuth, async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
     const friends = await Promise.all(
       user.followings.map((friendId) => {
-        return User.findById(friendId);
+        return User.findById(friendId).select("username profilePicture")
       })
     );
-    let friendList = [];
-    friends.map((friend) => {
-      const { _id, username, profilePicture } = friend;
 
-      friendList.push({ _id, username, profilePicture });
-    });
 
-    res.status(200).json(friendList);
+    res.status(200).json(friends);
   } catch (err) {
     res.status(500).json(err);
   }
