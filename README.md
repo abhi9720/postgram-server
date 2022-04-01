@@ -6,16 +6,6 @@ Looks Excited right , just click on link below and create your account and join 
 
 ---
 
-## Live Demo [Postgram](https://postgram-social.herokuapp.com/#/)
-
-**Homepage**
-![Home Page](https://res.cloudinary.com/abhi97/image/upload/v1629359950/recipes/home_kmdzgh.png)
-
-**Profile**
-![PROFILE PAGE](https://res.cloudinary.com/abhi97/image/upload/v1629360037/recipes/profile_t1sjf0.png)
-
-**MESSENGER**
-![CHAT PAGE](https://res.cloudinary.com/abhi97/image/upload/v1629359956/recipes/chat_cozsol.png)
 
 ### Functionality and Features
 
