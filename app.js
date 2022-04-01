@@ -10,6 +10,8 @@ const morgan = require("morgan");
 const path = require("path");
 const socketEvents = require("./socketEvents");
 const cors = require("cors");
+const expressVisitorCounter = require('express-visitor-counter');
+const expressSession = require('express-session');
 
 const server = http.createServer(app);
 app.use(
@@ -23,18 +25,56 @@ app.use(
   })
 );
 
-mongoose.connect(
-  process.env.MONGO_URL,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  },
-  () => {
-    console.log("Connected to mongoDB");
-  }
-);
+
+(async () => {
+  await mongoose.connect(
+    process.env.MONGO_URL,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+    }
+  );
+
+
+  const db = mongoose.connection.db;
+
+
+  const counters = db.collection('counters');
+  app.enable('trust proxy');
+  app.use(expressSession({ secret: 'secret', resave: false, saveUninitialized: true }));
+
+  app.use(expressVisitorCounter({ collection: counters }));
+  app.use(expressSession({ secret: 'secret', resave: false, saveUninitialized: true }));
+
+  app.get('/visitcounter', async (req, res) => res.json(await counters.find().toArray()));
+
+
+
+
+
+
+
+
+})()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //==================== core policy ======================================
 // app.use(function (req, res, next) {
@@ -55,7 +95,7 @@ mongoose.connect(
 const port = process.env.PORT || 5000;
 
 
-server.listen(port, () => console.log(`Server has started.`));
+server.listen(port, () => console.log(`Server has started. http://localhost:${port}/`));
 
 // const server = app.listen(port, () => {
 //   console.log("Server Started.........." + `http://localhost:${port}/`);

@@ -42,12 +42,13 @@ router.get("/find/:firstUserId/:secondUserId", isAuth, async (req, res) => {
 // delete Conversation 
 router.delete("/delete/:firstUserId/:secondUserId", isAuth, async (req, res) => {
   try {
-    const res = await Conversation.findOneAndDelete({
+    const resdel = await Conversation.findOneAndDelete({
       members: { $all: [req.params.firstUserId, req.params.secondUserId] },
     });
 
-    res.status(200).send("Conversation deleted ok :)");
+    return res.status(200).json(resdel);
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       Error: err,
       message: "Conversation not found ",
