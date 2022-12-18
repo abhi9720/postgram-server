@@ -18,7 +18,12 @@ router.post("/", isAuth, async (req, res) => {
 //get conv of a user
 router.get("/:userId", isAuth, async (req, res) => {
   try {
-
+    const loginUserId = req.user.id;
+    if (!(loginUserId === req.params.userId)) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "Invalid Credentials" }] });
+    }
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] }
       // it return all the conversation in which this userID present
