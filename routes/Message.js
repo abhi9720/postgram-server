@@ -20,9 +20,6 @@ router.get('/:conversationId', isAuth, async (req, res) => {
 			conversationId: req.params.conversationId,
 		}).sort({ _id: -1 }).limit(days * 300);
 
-
-
-
 		res.status(200).json(messages.reverse());
 	} catch (err) {
 		res.status(500).json(err);
