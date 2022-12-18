@@ -20,8 +20,8 @@ router.get("/:userId", isAuth, async (req, res) => {
   try {
 
     const conversation = await Conversation.find({
-      members: { $in: [req.params.userId] },
-      // it return all the conversation in which thi userID present
+      members: { $in: [req.params.userId] }
+      // it return all the conversation in which this userID present
     });
     res.status(200).json(conversation);
   } catch (err) {

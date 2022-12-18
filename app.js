@@ -10,8 +10,23 @@ const morgan = require("morgan");
 const path = require("path");
 const socketEvents = require("./socketEvents");
 const cors = require("cors");
-const expressVisitorCounter = require('express-visitor-counter');
-const expressSession = require('express-session');
+
+
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error :")); // testing db connected or not
+db.once("open", () => {
+  console.log("---------------DataBase Connected -------------- ");
+});
+
+
 
 const server = http.createServer(app);
 app.use(
@@ -26,31 +41,6 @@ app.use(
 );
 
 
-(async () => {
-  await mongoose.connect(
-    process.env.MONGO_URL,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    }
-  );
-
-
-  const db = mongoose.connection.db;
-
-
-  const counters = db.collection('counters');
-  app.enable('trust proxy');
-  app.use(expressSession({ secret: 'secret', resave: false, saveUninitialized: true }));
-
-  app.use(expressVisitorCounter({ collection: counters }));
-
-
-  app.get('/visitcounter', async (req, res) => res.json(await counters.find().toArray()));
-
-})()
 
 
 

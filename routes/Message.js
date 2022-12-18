@@ -15,10 +15,15 @@ router.post('/', isAuth, async (req, res) => {
 // get message
 router.get('/:conversationId', isAuth, async (req, res) => {
 	try {
+		const days = req.query.days;
 		const messages = await Message.find({
 			conversationId: req.params.conversationId,
-		});
-		res.status(200).json(messages);
+		}).sort({ _id: -1 }).limit(days * 300);
+
+
+
+
+		res.status(200).json(messages.reverse());
 	} catch (err) {
 		res.status(500).json(err);
 	}
