@@ -46,16 +46,9 @@ app.use(
   app.use(expressSession({ secret: 'secret', resave: false, saveUninitialized: true }));
 
   app.use(expressVisitorCounter({ collection: counters }));
-  app.use(expressSession({ secret: 'secret', resave: false, saveUninitialized: true }));
+
 
   app.get('/visitcounter', async (req, res) => res.json(await counters.find().toArray()));
-
-
-
-
-
-
-
 
 })()
 

@@ -28,7 +28,7 @@ router.post("/register",
     }
 
     try {
-      // generate hashed password
+      // generate hashed password      
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(req.body.password, salt);
       // create new user
@@ -65,7 +65,7 @@ router.post("/register",
 // login user
 router.post("/login", [
   check("email", "Please include a valid email").isEmail(),
-  check("password", "Password is required ").exists(),
+  check("password", "Password is required").exists(),
 ], async (req, res) => {
 
   const errors = validationResult(req);
